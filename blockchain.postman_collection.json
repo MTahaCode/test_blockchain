@@ -1,0 +1,150 @@
+{
+  "info": {
+    "name": "Blockchain",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Jack",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{jack}}/health",
+              "host": ["{{jack}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Chain",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{jack}}/chain",
+              "host": ["{{jack}}"],
+              "path": ["chain"]
+            }
+          }
+        },
+        {
+          "name": "Add Block",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"Jack pays Tony 5\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{jack}}/add-block",
+              "host": ["{{jack}}"],
+              "path": ["add-block"]
+            }
+          }
+        },
+        {
+          "name": "Validate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"block\": {\n    \"index\": 1,\n    \"timestamp\": 0,\n    \"data\": \"Tony pays Jack 1000\",\n    \"prev_hash\": \"abc\",\n    \"hash\": \"fake\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{jack}}/validate",
+              "host": ["{{jack}}"],
+              "path": ["validate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tony",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tony}}/health",
+              "host": ["{{tony}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Chain",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tony}}/chain",
+              "host": ["{{tony}}"],
+              "path": ["chain"]
+            }
+          }
+        },
+        {
+          "name": "Add Block",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"Tony pays Jack 5\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{tony}}/add-block",
+              "host": ["{{tony}}"],
+              "path": ["add-block"]
+            }
+          }
+        },
+        {
+          "name": "Validate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"block\": {\n    \"index\": 1,\n    \"timestamp\": 0,\n    \"data\": \"Jack pays Tony 1000\",\n    \"prev_hash\": \"abc\",\n    \"hash\": \"fake\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{tony}}/validate",
+              "host": ["{{tony}}"],
+              "path": ["validate"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
