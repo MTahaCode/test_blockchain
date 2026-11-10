@@ -50,6 +50,60 @@ class BlockChain:
     def load_chain(self, blocks):
         self.chain = blocks
 
+    def get_hashes(self):
+        return [block.hash for block in self.chain]
+
+    def find_common_ancestor(self, other_hashes):
+        # Newest block of ours whose hash is also in the other chain
+        other_hashes = set(other_hashes)
+        for block in reversed(self.chain):
+            if block.hash in other_hashes:
+                return block
+        return None
+
+    def is_valid_branch(self, branch):
+        if not branch:
+            return False
+
+        # The first block's parent must be in our chain, at the position right before it
+        previous = None
+        for block in self.chain:
+            if block.hash == branch[0].prev_hash:
+                previous = block
+                break
+        if previous is None:
+            return False
+
+        # Every block must have a correct hash and link to the one before it
+        for block in branch:
+            if block.index != previous.index + 1:
+                return False
+            if block.prev_hash != previous.hash:
+                return False
+            if block.hash != Block.calculate_hash(block.index, block.timestamp, block.data, block.prev_hash):
+                return False
+            previous = block
+
+        return True
+
+    def replace(self, branch):
+        # The branch's first block points to its parent; find that parent in our chain,
+        # keep everything up to it and replace the rest with the branch
+        for index, block in enumerate(self.chain):
+            if block.hash == branch[0].prev_hash:
+                self.chain = self.chain[:index + 1] + branch
+                return True
+        return False
+
+    def add_seed_blocks(self, count):
+        # Deterministic blocks (timestamp = index) so every node seeds identical blocks
+        for _ in range(count):
+            previous_block = self.chain[-1]
+            index = previous_block.index + 1
+            data = f"Seed block {index}"
+            block_hash = Block.calculate_hash(index, index, data, previous_block.hash)
+            self.chain.append(Block(index, index, data, previous_block.hash, block_hash))
+
     def check_hashes(self):
         prev_hash = ""
         for index, block in enumerate(self.chain):
@@ -73,12 +127,13 @@ class BlockChain:
         ]
         
 
-chain = BlockChain()
+if __name__ == "__main__":
+    chain = BlockChain()
 
-chain.add_block("1")
-chain.add_block("2")
-chain.add_block("3")
-chain.add_block("4")
-chain.add_block("5")
+    chain.add_block("1")
+    chain.add_block("2")
+    chain.add_block("3")
+    chain.add_block("4")
+    chain.add_block("5")
 
-print(f"Blockchain is {"valid" if chain.check_hashes() else "invalid"}")
+    print(f"Blockchain is {"valid" if chain.check_hashes() else "invalid"}")
