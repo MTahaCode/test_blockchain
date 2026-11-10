@@ -13,12 +13,21 @@ class Block:
         concatenated = str(index) + str(prev_hash) + str(timestamp) + str(data)
         return hashlib.sha256(concatenated.encode("utf-8")).hexdigest()
     
+    def getJson(self):
+        return {
+            "index": self.index,
+            "timestamp": self.timestamp,
+            "data": self.data,
+            "prev_hash": self.prev_hash,
+            "hash": self.hash
+        }
+    
 class BlockChain:
     def __init__(self):
         self.chain = [self.create_genesis_block()]
         
     def create_genesis_block(self):
-        return Block(0, int(time.time()), "Genesis Block", "0", Block.calculate_hash(0, int(time.time()), "Genesis Block", "0"))
+        return Block(0, 0, "Genesis Block", "0", Block.calculate_hash(0, 0, "Genesis Block", "0"))
 
     def add_block(self, data):
         previous_block = self.chain[-1]
@@ -32,6 +41,15 @@ class BlockChain:
         
         self.chain.append(new_block)
         
+        return new_block
+
+    def add_received_block(self, block):
+        self.chain.append(block)
+        return block
+
+    def load_chain(self, blocks):
+        self.chain = blocks
+
     def check_hashes(self):
         prev_hash = ""
         for index, block in enumerate(self.chain):
@@ -41,6 +59,18 @@ class BlockChain:
             if (block.hash != block.calculate_hash(block.index, block.timestamp, block.data, prev_hash)):
                 return False
         return True
+    
+    def getJson(self):
+        return [
+            {
+                "index": block.index,
+                "timestamp": block.timestamp,
+                "data": block.data,
+                "prev_hash": block.prev_hash,
+                "hash": block.hash
+            }
+            for block in self.chain
+        ]
         
 
 chain = BlockChain()
