@@ -21,6 +21,18 @@
         },
         {
           "name": "Chain",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const chain = pm.response.json();",
+                  "pm.environment.set(\"jack_latest_hash\", chain[chain.length - 1].hash);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -32,13 +44,26 @@
           }
         },
         {
+          "name": "Blocks After Tony's Latest",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{jack}}/blocks-after/{{tony_latest_hash}}",
+              "host": ["{{jack}}"],
+              "path": ["blocks-after", "{{tony_latest_hash}}"]
+            },
+            "description": "Run Tony > Chain first, it saves Tony's latest hash into {{tony_latest_hash}}."
+          }
+        },
+        {
           "name": "Add Block",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"data\": \"Jack pays Tony 5\"\n}",
+              "raw": "{\n  \"block\": \"Jack pays Tony 5\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -59,7 +84,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"block\": {\n    \"index\": 1,\n    \"timestamp\": 0,\n    \"data\": \"Tony pays Jack 1000\",\n    \"prev_hash\": \"abc\",\n    \"hash\": \"fake\"\n  }\n}",
+              "raw": "{\n  \"block\": {\n    \"index\": 1,\n    \"timestamp\": 0,\n    \"data\": \"Tony pays Jack 1000\",\n    \"prev_hash\": \"abc\",\n    \"hash\": \"fake\"\n  },\n  \"sender\": \"tony\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -92,6 +117,18 @@
         },
         {
           "name": "Chain",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const chain = pm.response.json();",
+                  "pm.environment.set(\"tony_latest_hash\", chain[chain.length - 1].hash);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -103,13 +140,26 @@
           }
         },
         {
+          "name": "Blocks After Jack's Latest",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tony}}/blocks-after/{{jack_latest_hash}}",
+              "host": ["{{tony}}"],
+              "path": ["blocks-after", "{{jack_latest_hash}}"]
+            },
+            "description": "Run Jack > Chain first, it saves Jack's latest hash into {{jack_latest_hash}}."
+          }
+        },
+        {
           "name": "Add Block",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"data\": \"Tony pays Jack 5\"\n}",
+              "raw": "{\n  \"block\": \"Tony pays Jack 5\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -130,7 +180,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"block\": {\n    \"index\": 1,\n    \"timestamp\": 0,\n    \"data\": \"Jack pays Tony 1000\",\n    \"prev_hash\": \"abc\",\n    \"hash\": \"fake\"\n  }\n}",
+              "raw": "{\n  \"block\": {\n    \"index\": 1,\n    \"timestamp\": 0,\n    \"data\": \"Jack pays Tony 1000\",\n    \"prev_hash\": \"abc\",\n    \"hash\": \"fake\"\n  },\n  \"sender\": \"jack\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
